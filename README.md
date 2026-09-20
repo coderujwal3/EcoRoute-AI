@@ -24,10 +24,10 @@ User request
    +--> Demo geocoder/routing OR Nominatim + OSRM
    |
    +--> Static GTFS transit engine
-   |       +--> nearby origin stop
-   |       +--> scheduled transit trip
-   |       +--> nearby destination stop
-   |       +--> walking access + egress
+   |   +--> nearby origin stop
+   |   +--> scheduled transit trip
+   |   +--> nearby destination stop
+   |   +--> walking access + egress
    |
    v
 Sustainability + cost estimation
@@ -130,12 +130,6 @@ The final prototype addresses the internship's mandatory areas:
 - **Transparency:** scores, constraints, estimates and data-status labels are exposed.
 - **Ethics:** the UI avoids claiming proxy estimates are measurements or live facts.
 - **Privacy:** no personal or sensitive data is required for the core workflow.
-
-## Project submission mapping
-
-The internship guideline asks the final PPT/PDF to cover: title/name/college, SDG alignment, problem statement, AI solution overview, target users, responsible-AI considerations, expected impact, prototype/demo evidence and impact statement.
-
-See `docs/PROJECT_SUBMISSION.md` and `docs/DEMO_SCRIPT.md` for ready-to-use material.
 
 ## External references used by the implementation
 

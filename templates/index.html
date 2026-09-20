@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>EcoRoute AI — Sustainable Transport Planner</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
+  <style>
+    :root{--bg:#f4f7f5;--panel:#fff;--ink:#16221b;--muted:#66736b;--line:#dce5df;--accent:#1f7a4d;--accent2:#145c39;--soft:#edf7f0;--warn:#8a5a00;--danger:#9b2d2d;--shadow:0 12px 35px rgba(27,52,38,.08)}
+    *{box-sizing:border-box} body{margin:0;background:linear-gradient(180deg,#edf7f0 0,#f8faf8 430px,var(--bg) 100%);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--ink)}
+    .wrap{max-width:1180px;margin:0 auto;padding:28px 18px 60px}.topbar{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:22px}.brand{display:flex;align-items:center;gap:12px}.mark{width:42px;height:42px;border-radius:13px;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:900;font-size:20px}.brand h1{font-size:1.1rem;margin:0}.brand p{margin:2px 0 0;color:var(--muted);font-size:.86rem}.pill{border:1px solid #b9d4c3;background:#fff;padding:7px 11px;border-radius:999px;font-size:.78rem;font-weight:800;color:var(--accent2)}
+    .card{background:var(--panel);border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow);padding:22px;margin-bottom:18px}.hero{display:grid;grid-template-columns:1.4fr .8fr;gap:24px}.hero h2{font-size:2.1rem;line-height:1.06;margin:6px 0 12px;max-width:700px}.hero p{color:var(--muted);line-height:1.6}.mini-list{display:grid;gap:10px;margin-top:20px}.mini{border:1px solid var(--line);border-radius:14px;padding:12px 14px;background:#fbfdfb}.mini strong{display:block;margin-bottom:3px}.mini span{font-size:.86rem;color:var(--muted)}
+    .tag{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:7px 10px;background:var(--soft);color:var(--accent2);font-size:.76rem;font-weight:800}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.field label{display:block;font-size:.8rem;font-weight:800;margin:0 0 6px}.field input,.field select{width:100%;border:1px solid var(--line);border-radius:12px;padding:12px;background:#fff;color:var(--ink);font-size:.95rem;outline:none}.field input:focus,.field select:focus{border-color:#78ad8e;box-shadow:0 0 0 3px rgba(31,122,77,.08)}
+    .actions{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:16px;flex-wrap:wrap}.primary,.secondary{border:0;border-radius:12px;padding:12px 16px;font-weight:850;cursor:pointer}.primary{background:var(--accent);color:#fff}.primary:hover{background:var(--accent2)}.secondary{background:#eef3ef;color:#23402f}.primary:disabled{opacity:.6;cursor:wait}.toggle{display:flex;align-items:center;gap:8px;font-size:.86rem;color:var(--muted)}
+    .status{color:var(--muted);font-size:.86rem;margin-top:8px}.error{display:none;background:#fff2f2;border:1px solid #efcccc;color:var(--danger);border-radius:12px;padding:11px;margin-top:12px;font-size:.88rem}
+    .recommend-head{display:flex;justify-content:space-between;align-items:flex-start;gap:20px}.recommend-head h2{margin:0 0 4px}.recommend-head p{margin:0;color:var(--muted)}.rec-badge{background:#eaf6ee;border:1px solid #c7e2cf;color:var(--accent2);font-weight:850;border-radius:999px;padding:8px 12px;font-size:.78rem}
+    .metrics{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin:18px 0}.metric{padding:13px;border:1px solid var(--line);border-radius:14px;background:#fcfdfc}.metric small{color:var(--muted);display:block;font-size:.72rem;margin-bottom:5px}.metric strong{font-size:1.02rem}.good{color:var(--accent2)}
+    .layout2{display:grid;grid-template-columns:1fr 1fr;gap:18px}.panel-title{display:flex;justify-content:space-between;align-items:center;gap:12px}.panel-title h3{margin:0}.muted{color:var(--muted)}.notice{border:1px dashed #bccbc1;border-radius:14px;padding:13px;background:#fbfcfb;font-size:.86rem;line-height:1.55}.chips{display:flex;gap:7px;flex-wrap:wrap}.chip{background:#f0f4f1;border:1px solid var(--line);border-radius:999px;padding:5px 8px;font-size:.72rem;font-weight:750}
+    .legs{display:grid;gap:9px}.leg{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:start;padding:13px;border:1px solid var(--line);border-radius:14px}.step{width:28px;height:28px;border-radius:10px;background:var(--soft);color:var(--accent2);display:grid;place-items:center;font-size:.75rem;font-weight:900}.leg strong{display:block}.leg .meta{font-size:.82rem;color:var(--muted);margin-top:3px}.badge{font-size:.7rem;font-weight:800;border-radius:999px;background:#f0f4f1;border:1px solid var(--line);padding:5px 8px;color:#415048}
+    #map{height:430px;border-radius:16px;border:1px solid var(--line);overflow:hidden}.table-wrap{overflow:auto}table{width:100%;border-collapse:collapse;min-width:880px}th,td{text-align:left;padding:11px 9px;border-bottom:1px solid var(--line);vertical-align:top;font-size:.84rem}th{color:var(--muted);font-size:.74rem;text-transform:uppercase;letter-spacing:.03em}.rank{font-weight:900}.status-ok{color:var(--accent2);font-weight:800}.status-conflict{color:var(--warn);font-weight:800}
+    .footer{font-size:.78rem;color:var(--muted);text-align:center;padding:12px}.hidden{display:none!important}.scenario{background:#fbfdfb;border:1px solid var(--line);padding:12px;border-radius:14px;font-size:.83rem}.scenario button{float:right}
+    @media(max-width:900px){.hero,.layout2{grid-template-columns:1fr}.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.topbar{align-items:flex-start}.grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topbar">
+    <div class="brand"><div class="mark">E</div><div><h1>EcoRoute AI</h1><p>Sustainable transport decision support</p></div></div>
+    <span class="pill">SDG 11 · Final Prototype</span>
+  </div>
+
+  <section class="card hero">
+    <div>
+      <span class="tag">AI-assisted • transparent • free demo</span>
+      <h2>Compare travel choices through the lens of time, cost and environmental impact.</h2>
+      <p>EcoRoute AI combines routing data, a transparent sustainability estimate and a preference-aware decision engine. The explanation layer turns the structured result into a human-readable recommendation.</p>
+      <div class="mini-list">
+        <div class="mini"><strong>Decision support</strong><span>Filter hard constraints first, then compare feasible options using the selected priority.</span></div>
+        <div class="mini"><strong>Responsible AI</strong><span>Estimated values are labelled; demo transit data is explicitly marked as demonstration-only.</span></div>
+      </div>
+    </div>
+    <div class="scenario"><button class="secondary" id="demoBtn" type="button">Load demo scenario</button><strong>Fastest demo setup</strong><p style="margin:8px 0 0;color:var(--muted);line-height:1.5">Mohansarai → Lanka<br>Arrival ≤ 09:10<br>Budget ₹50<br>Priority: Sustainability</p></div>
+  </section>
+
+  <section class="card">
+    <form id="routeForm">
+      <div class="grid">
+        <div class="field"><label for="origin">Origin</label><input id="origin" required value="Mohansarai"></div>
+        <div class="field"><label for="destination">Destination</label><input id="destination" required value="Lanka"></div>
+        <div class="field"><label for="arrival_time">Arrival time</label><input id="arrival_time" type="time" value="09:10"></div>
+        <div class="field"><label for="budget_inr">Budget (₹)</label><input id="budget_inr" type="number" min="0" step="1" value="50"></div>
+        <div class="field"><label for="max_duration_min">Maximum travel time (minutes)</label><input id="max_duration_min" type="number" min="1" value="90"></div>
+        <div class="field"><label for="priority">Primary preference</label><select id="priority"><option value="sustainability">Lowest environmental impact</option><option value="cost">Lowest cost</option><option value="speed">Fastest</option><option value="balanced">Balanced</option></select></div>
+      </div>
+      <div class="actions">
+        <label class="toggle"><input id="demo_mode" type="checkbox" checked> Offline demo mode (no geocoding/routing API required)</label>
+        <button class="primary" id="submitBtn" type="submit">Find sustainable routes</button>
+      </div>
+      <div id="status" class="status"></div><div id="error" class="error"></div>
+    </form>
+  </section>
+
+  <section id="result" class="hidden">
+    <div class="card">
+      <div class="recommend-head"><div><h2 id="recommendedMode"></h2><p id="locations"></p></div><span class="rec-badge">Recommended by EcoRoute decision engine</span></div>
+      <div class="metrics">
+        <div class="metric"><small>Distance</small><strong id="recommendedDistance"></strong></div>
+        <div class="metric"><small>Total time</small><strong id="recommendedTime"></strong></div>
+        <div class="metric"><small>Estimated cost</small><strong id="recommendedCost"></strong></div>
+        <div class="metric"><small>Impact</small><strong class="good" id="recommendedImpact"></strong></div>
+        <div class="metric"><small>Trip CO₂e</small><strong id="recommendedCO2e"></strong></div>
+      </div>
+      <div class="notice"><strong>Why this option?</strong><div id="explanation" style="margin-top:6px"></div></div>
+      <div style="margin-top:12px" class="chips" id="reasons"></div>
+    </div>
+
+    <div class="layout2">
+      <div class="card"><div class="panel-title"><h3>Journey breakdown</h3><span class="badge">legs</span></div><div id="journeyLegs" class="legs" style="margin-top:12px"></div></div>
+      <div class="card"><div class="panel-title"><h3>Transit/data status</h3><span class="badge">provenance</span></div><div id="transitStatus" class="notice" style="margin-top:12px"></div><div id="methodology" class="notice" style="margin-top:10px"></div></div>
+    </div>
+
+    <div class="card"><div class="panel-title"><h3>Route map</h3><span class="badge">OpenStreetMap/Leaflet</span></div><div id="map" style="margin-top:12px"></div><p class="footer" id="attribution"></p></div>
+
+    <div class="card"><div class="panel-title"><h3>Alternatives & trade-offs</h3><span class="badge">transparent comparison</span></div><div class="table-wrap" style="margin-top:10px"><table><thead><tr><th>Mode</th><th>Distance</th><th>Time</th><th>Cost</th><th>Est. CO₂e</th><th>Impact</th><th>Score</th><th>Feasibility</th><th>Data</th></tr></thead><tbody id="alternatives"></tbody></table></div></div>
+
+    <div class="card"><div class="panel-title"><h3>Responsible-use notes</h3><span class="badge">mandatory internship section</span></div><div class="notice" style="margin-top:12px">Environmental values are proxy estimates, not measured trip emissions. Car cost is configurable. Walking/cycling use zero operational trip cost and zero operational tailpipe emissions in this simplified model. The bundled GTFS feed is a demonstration dataset and should not be used for real-world navigation. AI explanations are grounded in structured decision results and are not permitted to invent transport facts.</div></div>
+  </section>
+  <div class="footer">EcoRoute AI · Built as a working prototype for the 1M1B – IBM SkillsBuild AI + Sustainability Virtual Internship</div>
+</div>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+<script>
+let map=null,routeLayer=null;const form=document.getElementById('routeForm'),button=document.getElementById('submitBtn'),statusBox=document.getElementById('status'),errorBox=document.getElementById('error');
+const escapeHtml=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
+function ensureMap(){if(!map){map=L.map('map');L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; OpenStreetMap contributors'}).addTo(map);}}
+function drawGeoJson(geo,fit=false){if(routeLayer){map.removeLayer(routeLayer);routeLayer=null}if(!geo)return;routeLayer=L.geoJSON(geo,{style:{weight:5}}).addTo(map);if(fit&&routeLayer.getBounds().isValid())map.fitBounds(routeLayer.getBounds(),{padding:[20,20]})}
+function renderLegs(legs){document.getElementById('journeyLegs').innerHTML=(legs||[]).map((leg,i)=>`<div class="leg"><div class="step">${i+1}</div><div><strong>${escapeHtml(leg.mode)}</strong><div class="meta">${escapeHtml(leg.from_name)} → ${escapeHtml(leg.to_name)}</div><div class="meta">${leg.distance_km} km · ${leg.duration_min} min${leg.departure_time?` · ${escapeHtml(leg.departure_time)} → ${escapeHtml(leg.arrival_time)}`:''}${leg.fare_inr!=null?` · ₹${leg.fare_inr}`:''}</div></div><span class="badge">${escapeHtml(leg.source)}</span></div>`).join('')||'<div class="muted">No leg breakdown available.</div>'}
+function chips(items){document.getElementById('reasons').innerHTML=(items||[]).map(x=>`<span class="chip">${escapeHtml(x)}</span>`).join('')}
+document.getElementById('demoBtn').addEventListener('click',()=>{document.getElementById('origin').value='Mohansarai';document.getElementById('destination').value='Lanka';document.getElementById('arrival_time').value='09:10';document.getElementById('budget_inr').value='50';document.getElementById('max_duration_min').value='90';document.getElementById('priority').value='sustainability';document.getElementById('demo_mode').checked=true;window.scrollTo({top:document.getElementById('routeForm').getBoundingClientRect().top+window.scrollY-20,behavior:'smooth'})});
+form.addEventListener('submit',async e=>{e.preventDefault();errorBox.style.display='none';statusBox.textContent='Preparing route comparison…';button.disabled=true;button.textContent='Calculating…';
+const payload={origin:document.getElementById('origin').value.trim(),destination:document.getElementById('destination').value.trim(),arrival_time:document.getElementById('arrival_time').value,budget_inr:Number(document.getElementById('budget_inr').value),max_duration_min:Number(document.getElementById('max_duration_min').value),priority:document.getElementById('priority').value,demo_mode:document.getElementById('demo_mode').checked};
+try{const res=await fetch('/api/recommend',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});const data=await res.json();if(!res.ok)throw new Error(data.detail||'Request failed');
+const r=data.recommended;document.getElementById('result').classList.remove('hidden');document.getElementById('recommendedMode').textContent=r.mode;document.getElementById('recommendedDistance').textContent=`${r.distance_km} km`;document.getElementById('recommendedTime').textContent=`${r.duration_min} min`;document.getElementById('recommendedCost').textContent=`₹${r.cost_inr}`;document.getElementById('recommendedImpact').textContent=r.impact_label;document.getElementById('recommendedCO2e').textContent=`${r.estimated_co2e_kg} kg`;document.getElementById('locations').textContent=`${data.origin.display_name} → ${data.destination.display_name}`;document.getElementById('explanation').textContent=data.explanation;chips(r.reasons);document.getElementById('transitStatus').textContent=data.transit_status;renderLegs(r.legs);
+const rows=data.alternatives.map(o=>`<tr><td class="rank">${escapeHtml(o.mode)}</td><td>${o.distance_km} km</td><td>${o.duration_min} min</td><td>₹${o.cost_inr}</td><td>${o.estimated_co2e_kg} kg</td><td>${escapeHtml(o.impact_label)}</td><td>${o.score}</td><td class="${o.feasible?'status-ok':'status-conflict'}">${o.feasible?'Feasible':'Constraint conflict'}</td><td><span class="badge">${escapeHtml(o.data_status)}</span></td></tr>`).join('');document.getElementById('alternatives').innerHTML=rows||'<tr><td colspan="9" class="muted">No additional alternatives.</td></tr>';
+const m=data.methodology;document.getElementById('methodology').innerHTML=`<strong>${escapeHtml(m.source_name)}</strong><br>Metric: ${escapeHtml(m.metric)}<br>Context: ${escapeHtml(m.geographic_context)}<br>Source year: ${m.source_year}<br>${escapeHtml(m.caveat)}`;document.getElementById('attribution').textContent=data.routing_attribution;ensureMap();map.eachLayer(layer=>{if(layer instanceof L.Marker)map.removeLayer(layer)});drawGeoJson(r.geometry,true);L.marker([data.origin.lat,data.origin.lon]).addTo(map).bindPopup('Origin');L.marker([data.destination.lat,data.destination.lon]).addTo(map).bindPopup('Destination');setTimeout(()=>map.invalidateSize(),100);document.getElementById('result').scrollIntoView({behavior:'smooth',block:'start'});statusBox.textContent='';}
+catch(err){errorBox.textContent=err.message||'Unable to calculate routes.';errorBox.style.display='block';statusBox.textContent=''}finally{button.disabled=false;button.textContent='Find sustainable routes'}});
+</script>
+</body>
+</html>

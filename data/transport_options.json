@@ -1,0 +1,34 @@
+[
+  {
+    "mode": "Walking",
+    "duration_min": 95,
+    "cost_inr": 0,
+    "emission_factor_gco2e_pkm": 0,
+    "convenience_score": 4,
+    "notes": "Zero operational tailpipe emissions; practical only when the journey length and user circumstances allow."
+  },
+  {
+    "mode": "Bicycle",
+    "duration_min": 35,
+    "cost_inr": 0,
+    "emission_factor_gco2e_pkm": 0,
+    "convenience_score": 6,
+    "notes": "Zero operational tailpipe emissions; route safety and bike availability are not modeled in this MVP."
+  },
+  {
+    "mode": "Bus",
+    "duration_min": 40,
+    "cost_inr": 20,
+    "emission_factor_gco2e_pkm": 97,
+    "convenience_score": 7,
+    "notes": "India-context proxy factor; actual emissions vary with bus technology, occupancy, route and fuel."
+  },
+  {
+    "mode": "Private Car",
+    "duration_min": 25,
+    "cost_inr": 150,
+    "emission_factor_gco2e_pkm": 170,
+    "convenience_score": 9,
+    "notes": "India-context proxy factor; actual emissions vary with vehicle, fuel, congestion and occupancy."
+  }
+]

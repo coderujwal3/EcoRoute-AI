@@ -139,3 +139,11 @@ The final prototype addresses the internship's mandatory areas:
 - Nominatim usage policy: https://operations.osmfoundation.org/policies/nominatim/
 - OSRM HTTP API: https://project-osrm.org/docs/v26.4.0/http
 - World Resources Institute India, *Pathways to Decarbonize India's Transport Sector*: https://india.wri.org/sites/default/files/Pathways-to-decarbonize-India-s-transport-sector.pdf
+
+
+## Prototype dashboard
+### - ofline mode
+<img width="1920" height="2799" alt="image" src="https://github.com/user-attachments/assets/3004ee73-e2c3-4f29-a1c2-914ded58e8c2" />
+
+### - online mode
+<img width="1920" height="2798" alt="image" src="https://github.com/user-attachments/assets/1d5133a6-ffc6-4296-94e5-4fc826a1ce04" />
